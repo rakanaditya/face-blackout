@@ -1,33 +1,27 @@
-const upload = document.getElementById("upload");
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const upload = document.getElementById('upload');
+const canvas = document.getElementById('canvas');
+const loading = document.getElementById('loading');
 
-async function loadModels() {
-  await faceapi.nets.tinyFaceDetector.loadFromUri("https://cdn.jsdelivr.net/npm/face-api.js/weights");
-}
+upload.addEventListener('change', async () => {
+  loading.style.display = 'flex'; // tampilkan loading
 
-upload.addEventListener("change", async () => {
   const file = upload.files[0];
-  if (!file) return;
+  const img = await faceapi.bufferToImage(file);
 
-  const img = await createImageBitmap(file);
   canvas.width = img.width;
   canvas.height = img.height;
+  const ctx = canvas.getContext('2d');
   ctx.drawImage(img, 0, 0);
 
-  // deteksi wajah
-  const detections = await faceapi.detectAllFaces(
-    img,
-    new faceapi.TinyFaceDetectorOptions()
-  );
+  // proses deteksi wajah
+  await faceapi.nets.ssdMobilenetv1.loadFromUri('/models');
+  const detections = await faceapi.detectAllFaces(img);
 
-  // hitamkan wajah
   detections.forEach(det => {
     const { x, y, width, height } = det.box;
     ctx.fillStyle = "black";
     ctx.fillRect(x, y, width, height);
   });
-});
 
-// jalankan awal
-loadModels();
+  loading.style.display = 'none'; // sembunyikan loading setelah selesai
+});
