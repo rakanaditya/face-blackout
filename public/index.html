@@ -2,22 +2,23 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Penghitaman Wajah Otomatis</title>
-  <link rel="stylesheet" href="/style.css">
-
-  <!-- HARUS lebih dulu -->
-  <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-
-  <!-- Baru script kamu -->
-  <script defer src="/script.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Face API Example</title>
 </head>
 <body>
-  <h1>🔒 Penghitaman Wajah Otomatis</h1>
-  <input type="file" id="upload" accept="image/*">
-  <div class="container">
-    <canvas id="canvas"></canvas>
+  <h1>Face Detection Test</h1>
+
+  <!-- Input gambar -->
+  <input type="file" id="imageUpload" accept="image/*">
+
+  <!-- Tempat gambar & canvas -->
+  <div style="position: relative; display: inline-block;">
+    <img id="inputImage" style="max-width: 500px; display: none;">
+    <canvas id="overlay" style="position: absolute; left: 0; top: 0;"></canvas>
   </div>
 
-  <div id="loading" style="display:none">Memproses gambar...</div>
+  <!-- Import face-api.js dari CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+  <script defer src="script.js"></script>
 </body>
 </html>
