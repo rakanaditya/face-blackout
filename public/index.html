@@ -3,28 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Face Detection Modern</title>
+  <title>Face Blackout</title>
   <link rel="stylesheet" href="style.css">
-  <!-- CDN face-api.js -->
+  <!-- face-api.js dari CDN -->
   <script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
   <script defer src="script.js"></script>
 </head>
 <body>
-  <header>
-    <h1>👤 Face Detection</h1>
-    <p>Deteksi wajah real-time menggunakan <strong>face-api.js</strong></p>
-  </header>
+  <div class="container">
+    <h1>🕶️ Face Blackout</h1>
+    <p>Upload gambar dan wajah otomatis dihitamkan</p>
 
-  <main>
-    <div class="video-container">
-      <video id="video" autoplay muted playsinline></video>
-      <canvas id="overlay"></canvas>
+    <input type="file" id="imageUpload" accept="image/*">
+    
+    <div class="canvas-wrapper">
+      <canvas id="canvas"></canvas>
     </div>
-    <div id="status">🔄 Memuat model...</div>
-  </main>
-
-  <footer>
-    <p>© 2025 Face Detection Demo</p>
-  </footer>
+  </div>
 </body>
 </html>
