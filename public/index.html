@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Face API Example</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Deteksi Wajah - Face API</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Face Detection Test</h1>
+  <h1>Deteksi Wajah dengan face-api.js</h1>
 
-  <!-- Input gambar -->
-  <input type="file" id="imageUpload" accept="image/*">
+  <!-- Input File -->
+  <input type="file" id="imageUpload" accept="image/*" />
 
-  <!-- Tempat gambar & canvas -->
-  <div style="position: relative; display: inline-block;">
-    <img id="inputImage" style="max-width: 500px; display: none;">
-    <canvas id="overlay" style="position: absolute; left: 0; top: 0;"></canvas>
+  <!-- Tempat tampil gambar -->
+  <div id="image-container">
+    <img id="inputImage" style="max-width: 500px; display: none;" />
+    <canvas id="overlay"></canvas>
   </div>
 
-  <!-- Import face-api.js dari CDN -->
+  <!-- Script Face API & Custom -->
   <script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
   <script defer src="script.js"></script>
 </body>
