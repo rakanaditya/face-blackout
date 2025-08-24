@@ -1,56 +1,45 @@
-const video = document.getElementById("video");
-const overlay = document.getElementById("overlay");
-const statusText = document.getElementById("status");
-
-// 🔹 Load Models
+// Tunggu model face-api.js selesai diload
 Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri("./models"),
-  faceapi.nets.faceLandmark68Net.loadFromUri("./models"),
-  faceapi.nets.faceExpressionNet.loadFromUri("./models")
-]).then(startVideo).catch(err => {
-  statusText.innerText = "❌ Gagal memuat model: " + err;
-});
+  faceapi.nets.ssdMobilenetv1.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js/weights'),
+  faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js/weights'),
+  faceapi.nets.faceRecognitionNet.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js/weights')
+]).then(startApp);
 
-// 🔹 Start Video
-function startVideo() {
-  navigator.mediaDevices.getUserMedia({ video: {} })
-    .then(stream => {
-      video.srcObject = stream;
-      statusText.innerText = "✅ Model siap. Kamera aktif.";
-    })
-    .catch(err => {
-      statusText.innerText = "⚠️ Akses kamera ditolak!";
-      console.error(err);
+function startApp() {
+  const imageUpload = document.getElementById('imageUpload');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+
+  imageUpload.addEventListener('change', async () => {
+    const file = imageUpload.files[0];
+    if (!file) return;
+
+    const img = await loadImage(file);
+
+    // Atur ukuran canvas sesuai gambar
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+
+    // Deteksi wajah
+    const detections = await faceapi.detectAllFaces(img);
+
+    detections.forEach(det => {
+      const { x, y, width, height } = det.box;
+
+      // Buat kotak hitam di atas wajah
+      ctx.fillStyle = "black";
+      ctx.fillRect(x, y, width, height);
     });
+  });
 }
 
-// 🔹 Detect Faces
-video.addEventListener("play", () => {
-  const displaySize = { width: video.width, height: video.height };
-  faceapi.matchDimensions(overlay, displaySize);
-
-  setInterval(async () => {
-    try {
-      const detections = await faceapi.detectAllFaces(video)
-        .withFaceLandmarks()
-        .withFaceExpressions();
-
-      const resized = faceapi.resizeResults(detections, displaySize);
-
-      overlay.getContext("2d").clearRect(0, 0, overlay.width, overlay.height);
-
-      faceapi.draw.drawDetections(overlay, resized);
-      faceapi.draw.drawFaceLandmarks(overlay, resized);
-      faceapi.draw.drawFaceExpressions(overlay, resized);
-
-      if (detections.length > 0) {
-        statusText.innerText = `😀 Wajah terdeteksi (${detections.length})`;
-      } else {
-        statusText.innerText = "😐 Tidak ada wajah terdeteksi";
-      }
-    } catch (err) {
-      console.error(err);
-      statusText.innerText = "⚠️ Error deteksi wajah.";
-    }
-  }, 200);
-});
+// Fungsi helper untuk load gambar
+function loadImage(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+  });
+}
