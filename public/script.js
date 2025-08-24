@@ -20,28 +20,19 @@ upload.addEventListener('change', async () => {
   const file = upload.files[0];
   if (!file) return;
 
-  // Tampilkan overlay loading setelah user pilih file
+  // 🔥 Tampilkan overlay hanya setelah user upload file
   loading.style.display = 'flex';
 
   try {
-    // Buat image dari file
     const img = await faceapi.bufferToImage(file);
 
-    // Set ukuran canvas sesuai gambar
     canvas.width = img.width;
     canvas.height = img.height;
     ctx.drawImage(img, 0, 0);
 
-    // --- PILIH DETECTOR ---
-    // SSD MobilenetV1 (lebih akurat, lebih berat)
+    // Deteksi wajah
     const detections = await faceapi.detectAllFaces(img);
 
-    // Kalau mau lebih cepat (TinyFaceDetector), pakai ini:
-    // const detections = await faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions());
-
-    console.log("Wajah terdeteksi:", detections.length);
-
-    // Hitamkan wajah yang terdeteksi
     detections.forEach(det => {
       const { x, y, width, height } = det.box;
       ctx.fillStyle = "black";
@@ -49,10 +40,10 @@ upload.addEventListener('change', async () => {
     });
 
   } catch (err) {
-    console.error("❌ Error saat proses gambar:", err);
-    alert("Gagal memproses gambar. Cek console untuk detail.");
+    console.error("Error:", err);
+    alert("Gagal memproses gambar.");
   }
 
-  // Sembunyikan overlay setelah proses selesai
+  // 🔥 Sembunyikan overlay setelah selesai
   loading.style.display = 'none';
 });
