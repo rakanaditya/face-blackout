@@ -7,38 +7,52 @@
   <script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
   <script defer src="script.js"></script>
   <style>
-   <style>
-  #loading {
-    display: none; /* 🔥 pastikan default HIDDEN */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    color: white;
-    font-size: 1.5em;
-    font-weight: bold;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-  }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
 
-  .spinner {
-    border: 6px solid rgba(255,255,255,0.2);
-    border-top: 6px solid #fff;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-    margin-right: 15px;
-  }
+    .container {
+      margin-top: 20px;
+    }
 
-  @keyframes spin {
-    100% { transform: rotate(360deg); }
-  }
-</style>
+    canvas {
+      border: 1px solid #555;
+      max-width: 90%;
+    }
 
+    /* Overlay loading */
+    #loading {
+      display: none; /* 🔥 default HIDDEN */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      font-size: 1.2em;
+      font-weight: bold;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .spinner {
+      border: 6px solid rgba(255,255,255,0.2);
+      border-top: 6px solid #fff;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin-right: 15px;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
