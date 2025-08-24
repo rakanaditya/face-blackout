@@ -1,6 +1,6 @@
 // Tunggu model face-api.js selesai dimuat dari folder lokal /models
 Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+  faceapi.nets.ssd_mobilenetv1_model-shard1.loadFromUri('/models'),
   faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
   faceapi.nets.faceRecognitionNet.loadFromUri('/models')
 ]).then(startApp);
