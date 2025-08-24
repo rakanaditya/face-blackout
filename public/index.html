@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Deteksi Wajah - Face API</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <h1>Deteksi Wajah dengan face-api.js</h1>
-
-  <!-- Input File -->
-  <input type="file" id="imageUpload" accept="image/*" />
-
-  <!-- Tempat tampil gambar -->
-  <div id="image-container">
-    <img id="inputImage" style="max-width: 500px; display: none;" />
-    <canvas id="overlay"></canvas>
-  </div>
-
-  <!-- Script Face API & Custom -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Face Detection Modern</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- CDN face-api.js -->
   <script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
   <script defer src="script.js"></script>
+</head>
+<body>
+  <header>
+    <h1>👤 Face Detection</h1>
+    <p>Deteksi wajah real-time menggunakan <strong>face-api.js</strong></p>
+  </header>
+
+  <main>
+    <div class="video-container">
+      <video id="video" autoplay muted playsinline></video>
+      <canvas id="overlay"></canvas>
+    </div>
+    <div id="status">🔄 Memuat model...</div>
+  </main>
+
+  <footer>
+    <p>© 2025 Face Detection Demo</p>
+  </footer>
 </body>
 </html>
