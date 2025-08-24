@@ -1,58 +1,56 @@
-const upload = document.getElementById('upload');
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-const loading = document.getElementById('loading');
+const video = document.getElementById("video");
+const overlay = document.getElementById("overlay");
+const statusText = document.getElementById("status");
 
-// Pastikan model sudah diload sebelum dipakai
-async function loadModels() {
-  try {
-    const MODEL_URL = "/models"; // folder model di public/models
-    await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
-    await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL); 
-    await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL); 
-    console.log("✅ Semua model berhasil dimuat");
-  } catch (err) {
-    console.error("❌ Gagal load model:", err);
-  }
-}
+// 🔹 Load Models
+Promise.all([
+  faceapi.nets.ssdMobilenetv1.loadFromUri("./models"),
+  faceapi.nets.faceLandmark68Net.loadFromUri("./models"),
+  faceapi.nets.faceExpressionNet.loadFromUri("./models")
+]).then(startVideo).catch(err => {
+  statusText.innerText = "❌ Gagal memuat model: " + err;
+});
 
-async function handleImageUpload(file) {
-  try {
-    const img = await faceapi.bufferToImage(file);
-
-    // Resize canvas sesuai ukuran gambar
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    // Gambar foto asli
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0);
-
-    // Jalankan deteksi wajah
-    const detections = await faceapi.detectAllFaces(img);
-
-    // Hitamkan setiap wajah
-    detections.forEach(det => {
-      const { x, y, width, height } = det.box;
-      ctx.fillStyle = "black";
-      ctx.fillRect(x, y, width, height);
+// 🔹 Start Video
+function startVideo() {
+  navigator.mediaDevices.getUserMedia({ video: {} })
+    .then(stream => {
+      video.srcObject = stream;
+      statusText.innerText = "✅ Model siap. Kamera aktif.";
+    })
+    .catch(err => {
+      statusText.innerText = "⚠️ Akses kamera ditolak!";
+      console.error(err);
     });
-
-    console.log(`✅ Wajah berhasil diproses: ${detections.length} terdeteksi`);
-  } catch (err) {
-    console.error("❌ Error saat memproses gambar:", err);
-    alert("Gagal memproses gambar. Coba lagi dengan foto lain.");
-  }
 }
 
-// Tunggu model selesai dulu baru aktifkan upload
-loadModels().then(() => {
-  upload.addEventListener('change', async () => {
-    const file = upload.files[0];
-    if (!file) return;
+// 🔹 Detect Faces
+video.addEventListener("play", () => {
+  const displaySize = { width: video.width, height: video.height };
+  faceapi.matchDimensions(overlay, displaySize);
 
-    loading.style.display = 'flex'; // tampilkan overlay
-    await handleImageUpload(file);
-    loading.style.display = 'none'; // sembunyikan overlay
-  });
+  setInterval(async () => {
+    try {
+      const detections = await faceapi.detectAllFaces(video)
+        .withFaceLandmarks()
+        .withFaceExpressions();
+
+      const resized = faceapi.resizeResults(detections, displaySize);
+
+      overlay.getContext("2d").clearRect(0, 0, overlay.width, overlay.height);
+
+      faceapi.draw.drawDetections(overlay, resized);
+      faceapi.draw.drawFaceLandmarks(overlay, resized);
+      faceapi.draw.drawFaceExpressions(overlay, resized);
+
+      if (detections.length > 0) {
+        statusText.innerText = `😀 Wajah terdeteksi (${detections.length})`;
+      } else {
+        statusText.innerText = "😐 Tidak ada wajah terdeteksi";
+      }
+    } catch (err) {
+      console.error(err);
+      statusText.innerText = "⚠️ Error deteksi wajah.";
+    }
+  }, 200);
 });
