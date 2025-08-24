@@ -6,7 +6,8 @@ const loading = document.getElementById('loading');
 // Muat model sekali di awal
 async function loadModels() {
   try {
-    const MODEL_URL = "https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights";
+    // Ambil dari folder lokal /models
+    const MODEL_URL = "/models";
     await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
     console.log("✅ Model berhasil dimuat");
   } catch (err) {
@@ -14,7 +15,6 @@ async function loadModels() {
   }
 }
 
-loadModels();
 
 upload.addEventListener('change', async () => {
   const file = upload.files[0];
